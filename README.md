@@ -282,5 +282,271 @@ form.addEventListener('submit', function(e) {
 
 ## Nomor 2
 
+### Description
+Membuat form pencarian kode pos Indonesia dengan inputan Provinsi, Kabupaten/ Kota, Kecamatan, kemudian outputnya kode pos dan informasi daerah.
+
+### Kode 
+
+kodepos.html
+```
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cari Kode Pos Indonesia</title>
+    <link rel="stylesheet" href="style-kodepos.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>📮 Cek Kode Pos</h2>
+            <p>Pilih wilayah secara berurutan untuk melihat kode pos.</p>
+        </div>
+
+        <form id="posForm">
+            <div class="form-group">
+                <label>Provinsi</label>
+                <select id="selectProvinsi">
+                    <option value="">-- Pilih Provinsi --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Kota / Kabupaten</label>
+                <select id="selectKota" disabled>
+                    <option value="">-- Pilih Provinsi Dulu --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Kecamatan</label>
+                <select id="selectKecamatan" disabled>
+                    <option value="">-- Pilih Kota Dulu --</option>
+                </select>
+            </div>
+        </form>
+
+        <div id="resultCard" class="result-box hidden">
+            <h3>Hasil Pencarian</h3>
+            <div class="result-content">
+                <span class="badge">Ditemukan</span>
+                <p>Kode Pos untuk daerah <strong id="resKecamatan">-</strong>, <span id="resKota">-</span> adalah:</p>
+                <h1 id="resKodePos">00000</h1>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script-kodepos.js"></script>
+</body>
+</html>
+```
+
+style-kodepos.css
+```
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; padding: 20px;
+}
+
+.container {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+}
+
+.header { text-align: center; margin-bottom: 30px; }
+.header h2 { color: #333; font-size: 1.8rem; margin-bottom: 5px; }
+.header p { color: #777; font-size: 0.9rem; }
+
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+
+select {
+    width: 100%; padding: 12px; border-radius: 10px;
+    border: 2px solid #f0f2f5; background: #f9fafb;
+    font-size: 1rem; color: #333; outline: none; transition: 0.3s;
+}
+
+select:focus { border-color: #4a90e2; background: #fff; }
+select:disabled { background: #eee; cursor: not-allowed; opacity: 0.6; }
+
+.result-box {
+    margin-top: 30px;
+    padding: 20px;
+    background: #e8f5e9;
+    border-left: 5px solid #2ecc71; 
+    border-radius: 8px;
+    animation: fadeIn 0.5s ease;
+}
+
+.hidden { display: none; } 
+
+.result-box h3 { font-size: 1rem; color: #2ecc71; margin-bottom: 10px; }
+.result-content p { font-size: 0.9rem; color: #555; margin-bottom: 5px; }
+.result-content h1 { font-size: 2.5rem; color: #2d3436; letter-spacing: 2px; }
+
+.badge {
+    display: inline-block; padding: 4px 8px; background: #2ecc71;
+    color: white; font-size: 0.7rem; border-radius: 4px; margin-bottom: 10px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+```
+
+script-kodepos.js
+```
+const databaseIndonesia = {
+    "Jawa Timur": {
+        "Surabaya": {
+            "Sukolilo": "60111",
+            "Gubeng": "60281",
+            "Rungkut": "60293",
+            "Tegalsari": "60262"
+        },
+        "Malang": {
+            "Klojen": "65111",
+            "Blimbing": "65126",
+            "Lowokwaru": "65141"
+        }
+    },
+    "DKI Jakarta": {
+        "Jakarta Pusat": {
+            "Gambir": "10110",
+            "Tanah Abang": "10240",
+            "Menteng": "10310"
+        },
+        "Jakarta Selatan": {
+            "Kebayoran Baru": "12110",
+            "Cilandak": "12430",
+            "Tebet": "12810"
+        }
+    },
+    "Jawa Barat": {
+        "Bandung": {
+            "Cicendo": "40171",
+            "Coblong": "40132",
+            "Andir": "40181"
+        },
+        "Bekasi": {
+            "Bekasi Barat": "17131",
+            "Bekasi Timur": "17111"
+        }
+    }
+};
+
+const selectProvinsi = document.getElementById('selectProvinsi');
+const selectKota = document.getElementById('selectKota');
+const selectKecamatan = document.getElementById('selectKecamatan');
+
+const resultCard = document.getElementById('resultCard');
+const resKecamatan = document.getElementById('resKecamatan');
+const resKota = document.getElementById('resKota');
+const resKodePos = document.getElementById('resKodePos');
+
+window.addEventListener('DOMContentLoaded', () => {
+    const listProvinsi = Object.keys(databaseIndonesia);
+    
+    listProvinsi.forEach(prov => {
+        const option = document.createElement('option');
+        option.value = prov;
+        option.textContent = prov;
+        selectProvinsi.appendChild(option);
+    });
+});
+
+
+selectProvinsi.addEventListener('change', function() {
+    const provTerpilih = this.value;
+
+    resetDropdown(selectKota, "-- Pilih Kota --");
+    resetDropdown(selectKecamatan, "-- Pilih Kota Dulu --");
+    resultCard.classList.add('hidden'); 
+    selectKecamatan.disabled = true;
+
+    if (provTerpilih) {
+        selectKota.disabled = false;
+        const dataKota = databaseIndonesia[provTerpilih];
+        const listKota = Object.keys(dataKota);
+
+        listKota.forEach(kota => {
+            const option = document.createElement('option');
+            option.value = kota;
+            option.textContent = kota;
+            selectKota.appendChild(option);
+        });
+    } else {
+        selectKota.disabled = true;
+    }
+});
+
+selectKota.addEventListener('change', function() {
+    const provTerpilih = selectProvinsi.value;
+    const kotaTerpilih = this.value;
+
+    resetDropdown(selectKecamatan, "-- Pilih Kecamatan --");
+    resultCard.classList.add('hidden');
+
+    if (kotaTerpilih) {
+        selectKecamatan.disabled = false;
+        const dataKecamatan = databaseIndonesia[provTerpilih][kotaTerpilih];
+        const listKecamatan = Object.keys(dataKecamatan);
+
+        listKecamatan.forEach(kec => {
+            const option = document.createElement('option');
+            option.value = kec;
+            option.textContent = kec;
+            selectKecamatan.appendChild(option);
+        });
+    } else {
+        selectKecamatan.disabled = true;
+    }
+});
+
+selectKecamatan.addEventListener('change', function() {
+    const provTerpilih = selectProvinsi.value;
+    const kotaTerpilih = selectKota.value;
+    const kecTerpilih = this.value;
+
+    if (kecTerpilih) {
+        const kodePos = databaseIndonesia[provTerpilih][kotaTerpilih][kecTerpilih];
+
+        resKecamatan.textContent = kecTerpilih;
+        resKota.textContent = kotaTerpilih;
+        resKodePos.textContent = kodePos;
+        
+        resultCard.classList.remove('hidden'); 
+    } else {
+        resultCard.classList.add('hidden');
+    }
+});
+
+function resetDropdown(element, defaultText) {
+    element.innerHTML = ''; 
+    const defaultOption = document.createElement('option');
+    defaultOption.value = "";
+    defaultOption.textContent = defaultText;
+    element.appendChild(defaultOption);
+}
+```
+
+### Web Result
+<img width="1372" height="1541" alt="image" src="https://github.com/user-attachments/assets/471b7bc1-b043-4157-a61e-abdb46cec44a" />
+
+<img width="1194" height="1483" alt="image" src="https://github.com/user-attachments/assets/1a8899de-0794-42ee-9cef-bfd7aeee047a" />
+
+
+
 
 
