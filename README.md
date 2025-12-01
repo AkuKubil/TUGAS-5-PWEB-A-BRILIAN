@@ -9,7 +9,7 @@ Implementasi :
 2. CSS
 3. JavaScript
 
-## Kode 
+## Code 
 
 index.html 
 
@@ -270,7 +270,7 @@ form.addEventListener('submit', function(e) {
 });
 ```
 
-## Hasil 
+## Web Result
 
 <img width="1362" height="1436" alt="image" src="https://github.com/user-attachments/assets/12dab56a-fe3b-42d0-a5a3-622f7b599471" />
 
