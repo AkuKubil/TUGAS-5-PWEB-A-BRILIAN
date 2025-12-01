@@ -1,7 +1,9 @@
 # TUGAS-5-PWEB-A-BRILIAN
+
+## Nomor 1 
 Membuat form registrasi yang terdiri dari nama mahasiswa, nim, mata kuliah, dan dosen.
 
-## Description
+### Description
 Membuat form registrasi yang terdiri dari nama mahasiswa, nim, mata kuliah, dan dosen.
 
 Implementasi : 
@@ -9,7 +11,7 @@ Implementasi :
 2. CSS
 3. JavaScript
 
-## Code 
+### Code 
 
 index.html 
 
@@ -270,13 +272,15 @@ form.addEventListener('submit', function(e) {
 });
 ```
 
-## Web Result
+### Web Result
 
 <img width="1362" height="1436" alt="image" src="https://github.com/user-attachments/assets/12dab56a-fe3b-42d0-a5a3-622f7b599471" />
 
 <img width="1627" height="1635" alt="image" src="https://github.com/user-attachments/assets/87099323-7578-4c70-b30d-b6760d4a4740" />
 
 <img width="1087" height="1374" alt="image" src="https://github.com/user-attachments/assets/13b74120-98ce-41f6-b3cc-30b3cb2c2686" />
+
+## Nomor 2
 
 
 
