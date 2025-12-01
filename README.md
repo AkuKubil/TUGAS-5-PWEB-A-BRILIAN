@@ -546,6 +546,201 @@ function resetDropdown(element, defaultText) {
 
 <img width="1194" height="1483" alt="image" src="https://github.com/user-attachments/assets/1a8899de-0794-42ee-9cef-bfd7aeee047a" />
 
+## Nomor 3 
+
+### Description
+Membuat List Dropdown dinamis
+
+### Code
+
+produk.html
+```
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Dropdown Produk</title>
+    <link rel="stylesheet" href="style-produk.css">
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h2>🛍️ Katalog Produk</h2>
+            <p>Pilih kategori untuk melihat merk yang tersedia.</p>
+        </div>
+
+        <form id="productForm">
+            <div class="form-group">
+                <label>Jenis Produk</label>
+                <select id="selectKategori">
+                    <option value="">-- Pilih Jenis Produk --</option>
+                    <option value="desktop">Desktop PC</option>
+                    <option value="laptop">Laptop</option>
+                    <option value="smartphone">Smartphone</option>
+                    <option value="tablet">Tablet</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Merk / Brand</label>
+                <select id="selectMerk" disabled>
+                    <option value="">-- Pilih Jenis Dulu --</option>
+                </select>
+            </div>
+        </form>
+
+        <div id="resultBox" class="result-card hidden">
+            <p>Kamu memilih:</p>
+            <h3 id="textHasil">-</h3>
+            <button class="btn-checkout">Lanjut ke Pembayaran</button>
+        </div>
+
+    </div>
+
+    <script src="script-produk.js"></script>
+</body>
+</html>
+```
+
+style-produk.css
+
+```
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+body {
+    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%); 
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh;
+}
+
+.container {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 15px;
+    width: 400px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+}
+
+.header { text-align: center; margin-bottom: 25px; }
+.header h2 { color: #2c3e50; margin-bottom: 5px; }
+.header p { color: #95a5a6; font-size: 0.9rem; }
+
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; font-weight: 600; color: #34495e; }
+
+select {
+    width: 100%; padding: 12px; border-radius: 8px;
+    border: 2px solid #ecf0f1; background: #fcfcfc;
+    color: #2c3e50; outline: none; transition: 0.3s; cursor: pointer;
+}
+
+select:focus { border-color: #3498db; background: #fff; }
+select:disabled { background: #f0f3f4; cursor: not-allowed; opacity: 0.7; }
+
+.result-card {
+    margin-top: 25px;
+    padding: 20px;
+    background: #eaf2f8; 
+    border-radius: 10px;
+    text-align: center;
+    border: 1px dashed #3498db;
+    animation: slideUp 0.4s ease;
+}
+
+.hidden { display: none; }
+
+.result-card h3 { color: #2980b9; margin: 10px 0; font-size: 1.4rem; }
+
+.btn-checkout {
+    background: #27ae60;
+    color: white; border: none; padding: 10px 20px;
+    border-radius: 20px; font-weight: bold; cursor: pointer;
+    margin-top: 10px; width: 100%;
+    transition: 0.2s;
+}
+
+.btn-checkout:hover { background: #219150; transform: scale(1.02); }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+```
+
+script-produk.js
+```
+const dataProduk = {
+    "desktop": [
+        "Dell Inspiron All-in-One",
+        "HP Pavilion Gaming",
+        "iMac 24 inch",
+        "Lenovo IdeaCentre"
+    ],
+    "laptop": [
+        "MacBook Pro M3",
+        "Asus ROG Zephyrus",
+        "Lenovo ThinkPad X1",
+        "Acer Swift 5"
+    ],
+    "smartphone": [
+        "iPhone 15 Pro",
+        "Samsung Galaxy S24 Ultra",
+        "Google Pixel 8",
+        "Xiaomi 14"
+    ],
+    "tablet": [
+        "iPad Air",
+        "Samsung Galaxy Tab S9",
+        "Microsoft Surface Go"
+    ]
+};
+
+const selectKategori = document.getElementById('selectKategori');
+const selectMerk = document.getElementById('selectMerk');
+const resultBox = document.getElementById('resultBox');
+const textHasil = document.getElementById('textHasil');
+
+selectKategori.addEventListener('change', function() {
+    const kategori = this.value;
+
+    selectMerk.innerHTML = '<option value="">-- Pilih Merk --</option>';
+    selectMerk.disabled = true;
+    resultBox.classList.add('hidden'); 
+
+    if (kategori && dataProduk[kategori]) {
+        selectMerk.disabled = false;
+
+        const daftarMerk = dataProduk[kategori];
+
+        daftarMerk.forEach(merk => {
+            const option = document.createElement('option');
+            option.value = merk;
+            option.textContent = merk;
+            selectMerk.appendChild(option);
+        });
+    }
+});
+
+selectMerk.addEventListener('change', function() {
+    const merk = this.value;
+    if (merk) {
+        textHasil.textContent = merk;
+        resultBox.classList.remove('hidden');
+    } else {
+        resultBox.classList.add('hidden');
+    }
+});
+```
+
+### Web Result
+<img width="1009" height="1279" alt="image" src="https://github.com/user-attachments/assets/53f110d6-fd47-49ad-9dd5-dff400e36271" />
+
+<img width="897" height="1123" alt="image" src="https://github.com/user-attachments/assets/d7fc29fd-2898-4031-adb8-c69ed064dd67" />
+
+
 
 
 
